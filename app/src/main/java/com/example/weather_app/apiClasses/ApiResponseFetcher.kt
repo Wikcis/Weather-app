@@ -1,7 +1,6 @@
 package com.example.weather_app.apiClasses
 
 import android.content.Context
-import android.icu.lang.UCharacter.GraphemeClusterBreak
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader

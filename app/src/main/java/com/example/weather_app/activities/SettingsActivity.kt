@@ -2,9 +2,7 @@ package com.example.weather_app.activities
 
 import android.content.Context
 import android.content.Intent
-import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -16,10 +14,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.weather_app.R
 import com.example.weather_app.apiClasses.CallApi
 import com.example.weather_app.databinding.ActivitySettingsBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -38,7 +32,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.refreshButton.setOnClickListener {
-            val lastAccessedFile = CallApi().getLastAccessedFile(filesDir.toString())
+            val lastAccessedFile = CallApi(applicationContext).getLastAccessedFile()
             if (lastAccessedFile != null) {
                 val intent = Intent(applicationContext, LauncherActivity::class.java)
                 startActivity(intent)

@@ -2,27 +2,27 @@ package com.example.weather_app.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.weather_app.R
 import com.example.weather_app.apiClasses.ApiResponseFetcher
 import com.example.weather_app.databinding.FragmentBasicDataBinding
-import com.example.weather_app.models.HourlyForecastResponseModel
 import com.example.weather_app.models.BasicDataResponseModel
+import com.example.weather_app.models.HourlyForecastResponseModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.round
 
+
 class BasicDataFragment : Fragment(R.layout.fragment_basic_data) {
     private lateinit var binding: FragmentBasicDataBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,7 +42,7 @@ class BasicDataFragment : Fragment(R.layout.fragment_basic_data) {
         val type = prefs.getString("type", "°C")
 
         binding.tempTextView.text = StringBuilder().append("${round(basicResponse.main.temp.toString().toDouble()).toInt()} $type")
-        binding.latTextView.text = StringBuilder().append("Coords: ${basicResponse.coord.lat}")
+        binding.latTextView.text = StringBuilder().append("Coords: ${basicResponse.coord.lat}   ")
         binding.lonTextView.text = StringBuilder().append("${basicResponse.coord.lon}")
 
         binding.timeTextView.text = ApiResponseFetcher().getCurrentTimeFromTimezone(basicResponse.timezone)
@@ -105,7 +105,6 @@ class BasicDataFragment : Fragment(R.layout.fragment_basic_data) {
 
         return view
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         val activity = requireActivity()

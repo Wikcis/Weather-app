@@ -2,7 +2,6 @@ package com.example.weather_app.activities
 
 import android.content.Context
 import android.content.Intent
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,13 +12,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.weather_app.apiClasses.CallApi
 import com.example.weather_app.R
+import com.example.weather_app.apiClasses.CallApi
 import com.example.weather_app.databinding.ActivitySearchCitiesBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
@@ -44,6 +39,7 @@ class SearchCitiesActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         favouriteCitiesNames = ArrayList()
         cityNames = ArrayList()
         var dir = File(filesDir, "weatherApp/favourites")
@@ -101,45 +97,9 @@ class SearchCitiesActivity : AppCompatActivity() {
             }else{
                 val args = Bundle()
                 args.putString("cityName", userCityName)
-                val geocoder = Geocoder(this)
 
-                try {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val coords = geocoder.getFromLocationName(userCityName, 1)
-                        if (!coords.isNullOrEmpty()) {
-                            binding.containerLayout.removeAllViews()
-
-                            val lat = coords[0]?.latitude.toString()
-                            val lon = coords[0]?.longitude.toString()
-
-                            val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-
-                            val basicDataFileDeferred = async {
-                                val url = CallApi().buildUrl(prefs, lat, lon, "weather")
-                                CallApi().getCall(filesDir.toString() ,url, "${userCityName}BasicData.json")
-                            }
-
-                            val hourlyForecastFileDeferred = async {
-                                val url = CallApi().buildUrl(prefs, lat, lon, "forecast")
-                                CallApi().getCall(filesDir.toString(), url, "${userCityName}BasicDataHourlyForecast.json")
-                            }
-
-                            val basicDataFile = basicDataFileDeferred.await()
-                            val hourlyForecastFile = hourlyForecastFileDeferred.await()
-
-                            if (basicDataFile == "Failed" || hourlyForecastFile == "Failed") {
-                                Log.d("File creation failed", "Failed to create one or more files")
-                            }
-                            val intent = Intent(applicationContext, LauncherActivity::class.java)
-                            intent.putExtra("cityName", userCityName)
-                            startActivity(intent)
-                        }else{
-                            Toast.makeText(applicationContext, "Wrong city name!", Toast.LENGTH_SHORT).show()
-                        }
-
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                if(CallApi(applicationContext).searchCity()){
+                    binding.containerLayout.removeAllViews()
                 }
             }
         }
@@ -177,7 +137,6 @@ class SearchCitiesActivity : AppCompatActivity() {
             favCityNameButton.text = favouriteCitiesNames[i]
 
             favCityNameButton.setOnClickListener {
-                Log.d("giving city name: ", favouriteCitiesNames[i])
                 val intent = Intent(applicationContext, LauncherActivity::class.java)
                 intent.putExtra("cityName", favouriteCitiesNames[i])
                 startActivity(intent)

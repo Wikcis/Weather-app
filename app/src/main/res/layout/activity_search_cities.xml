@@ -27,6 +27,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:autoSizeMaxTextSize="30sp"
+        android:autoSizeMinTextSize="20sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="left|bottom"
+        android:maxLength="50"
         app:layout_constraintBottom_toTopOf="@id/searchBarHelper"
         app:layout_constraintEnd_toStartOf="@id/searchButtonHelper"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <ScrollView
         android:layout_width="0dp"
